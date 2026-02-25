@@ -9,7 +9,6 @@ This repository contains the official implementation of **MultiAtlas-Mamba**, a 
 Unlike traditional methods that rely on time-consuming pairwise registration, our method uses a **single T1-weighted MRI** to simultaneously predict multiple heterogeneous atlases (e.g., WMPARC, APARC2009, AICHA, Brainnetome). It features a shared **U-Mamba** encoder to capture long-range anatomical dependencies and introduces a **Cross-Atlas Synergistic Learning** strategy. This allows the model to leverage strong supervision from anatomical ground truths to rectify noise in label-unavailable (pseudo-labeled) functional tasks.
 
 ![Overview of MultiAtlas-Mamba](image/overview.png)
-*(Note: Please ensure you have an 'image' folder and put your 'overview.png' diagram inside it)*
 
 ## Create a Virtual Environment
 ```bash
