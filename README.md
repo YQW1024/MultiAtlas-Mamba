@@ -50,5 +50,5 @@ nnUNetv2_train <DATASET_NAME> 3d_fullres all -tr nnUNetTrainerUMambaBot
 ```
 ## Prediction
 ```bash
-nnUNetv2_predict -i <INPUT_FOLDER> -o <OUTPUT_FOLDER> -d <DATASET_NAME> -c 3d_fullres -f all -tr nnUNetTrainerUMambaBot --disable_tta
+nnUNetv2_predict -i <INPUT_FOLDER> -o <OUTPUT_FOLDER> -d <DATASET_NAME> -c 3d_fullres -f all -tr nnUNetTrainerUMambaBot
 ```
