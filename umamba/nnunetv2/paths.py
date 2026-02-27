@@ -42,7 +42,7 @@ data/
 │   ├── ...
 """
 
-base = '/data/yqw/U-Mamba'
+base = '/path/to/your/U-Mamba'
 # or you can set your own path, e.g., base = '/home/user_name/Documents/U-Mamba/data'
 nnUNet_raw = join(base, 'nnUNet_raw') # os.environ.get('nnUNet_raw')
 nnUNet_preprocessed = join(base, 'nnUNet_preprocessed') # os.environ.get('nnUNet_preprocessed')
