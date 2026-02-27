@@ -2,10 +2,10 @@
 import os
 import subprocess
 
-mni_path = "/media/UG2/yqw/T1/MNI"
+mni_path = "/path/to/your/dataset/MNI"
 atlas_path = os.path.join(mni_path, "MNI152_T1_1mm_Brain.nii.gz")
 
-t1_root = "/media/UG2/yqw/T1/Caff/"
+t1_root = "/path/to/your/dataset/Caff/"
 
 
 for subdir in os.listdir(t1_root):

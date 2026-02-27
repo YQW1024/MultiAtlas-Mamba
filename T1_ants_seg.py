@@ -3,9 +3,9 @@
 import os
 import subprocess
 
-atlas_path = "/media/UG2/yqw/T1/Atlas/sa/shen_1mm_268_parcellation_mni.nii.gz"#tupu
+atlas_path = "/path/to/your/dataset/T1/Atlas/sa/shen_1mm_268_parcellation_mni.nii.gz"
 
-hcp_root = "/media/UG2/yqw/T1/Caff/"
+hcp_root = "/path/to/your/dataset/T1/Caff/"
 
 for subject in os.listdir(hcp_root):
     sub_path = os.path.join(hcp_root, subject)

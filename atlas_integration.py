@@ -4,8 +4,8 @@ import os
 from batchgenerators.utilities.file_and_folder_operations import subfiles, join
 
 
-base_dir = '/data/yqw/U-Mamba/nnUNet_preprocessed/Dataset002_T1_aparc2009/nnUNetPlans_3d_fullres/'
-second_dir = '/data/yqw/U-Mamba/nnUNet_preprocessed/Dataset001_T1_wmparc/nnUNetPlans_3d_fullres/'
+base_dir = '/path/to/your/U-Mamba/nnUNet_preprocessed/Dataset002_T1_aparc2009/nnUNetPlans_3d_fullres/'
+second_dir = '/path/to/your/U-Mamba/nnUNet_preprocessed/Dataset001_T1_wmparc/nnUNetPlans_3d_fullres/'
 
 def merge_preprocessed_data_standard():
 
