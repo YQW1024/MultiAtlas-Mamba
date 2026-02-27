@@ -5,7 +5,7 @@ from torch import nn
 from torch.cuda.amp import autocast
 from typing import Union, Tuple, List
 
-# µ¼Èë nnU-Net Ô­Ê¼×é¼ş
+# ï¿½ï¿½ï¿½ï¿½ nnU-Net Ô­Ê¼ï¿½ï¿½ï¿½
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from nnunetv2.utilities.plans_handling.plans_handler import ConfigurationManager, PlansManager
 from nnunetv2.utilities.helpers import dummy_context
@@ -13,11 +13,11 @@ from nnunetv2.training.loss.compound_losses import DC_and_CE_loss
 from nnunetv2.training.loss.deep_supervision import DeepSupervisionWrapper
 from nnunetv2.training.loss.dice import MemoryEfficientSoftDiceLoss, get_tp_fp_fn_tn
 
-# µ¼ÈëÄãĞŞ¸ÄºóµÄÄ£ĞÍ»ñÈ¡º¯Êı
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸Äºï¿½ï¿½Ä£ï¿½Í»ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 from nnunetv2.nets.UMambaBot_3d import get_umamba_bot_3d_from_plans
 from nnunetv2.nets.UMambaBot_2d import get_umamba_bot_2d_from_plans
 
-# --- ¶¨Òå¶àÈÎÎñ Loss °ü×°Æ÷ ---
+
 class MultiTask_DC_and_CE_loss(nn.Module):
     def __init__(self, task_losses: nn.ModuleList, task_weights: List[float] = None):
         super(MultiTask_DC_and_CE_loss, self).__init__()
@@ -27,11 +27,10 @@ class MultiTask_DC_and_CE_loss(nn.Module):
     def forward(self, net_outputs: List, target: Union[torch.Tensor, List]):
         total_loss = 0
         for i, loss_func in enumerate(self.task_losses):
-            # »ñÈ¡µÚ i ¸ö½âÂëÆ÷µÄÊä³ö
+
             task_output = net_outputs[i]
             
-            # ´Ó target ÖĞÇĞ·Ö³ö¶ÔÓ¦µÄÍ¨µÀ¡£
-            # Èç¹û¿ªÆôÁËÉî¼à¶½£¬target ÊÇÒ»¸öÁĞ±í£¬ÁĞ±íÀïÃ¿¸öÔªËØÊÇ [B, 2, Z, Y, X]
+
             if isinstance(target, (list, tuple)):
                 task_target = [t[:, i:i+1] for t in target]
             else:
@@ -41,32 +40,27 @@ class MultiTask_DC_and_CE_loss(nn.Module):
         return total_loss
 
 
-# --- ĞŞ¸ÄºóµÄÑµÁ·Æ÷Àà ---
+
 class nnUNetTrainerUMambaBot(nnUNetTrainer):
     def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict, unpack_dataset: bool = True,
                  device: torch.device = torch.device('cuda')):
         
         
         import os
-        # »ñÈ¡µ±Ç°½ø³ÌµÄ rank
         lr = int(os.environ.get('LOCAL_RANK', 0))
-        
-        # 1. ºËĞÄ²¹¶¡£ºÇ¿ÖÆÉèÖÃÈ«¾Öµ±Ç°Éè±¸
+
         torch.cuda.set_device(lr)
-        
-        # 2. ¹¹ÔìÕıÈ·µÄÉè±¸¶ÔÏó²¢Ç¿ÖÆ¸²¸Ç´«ÈëµÄ²ÎÊı
+
         new_device = torch.device(f'cuda:{lr}')
-        
-        # 3. µ÷ÓÃ¸¸Àà³õÊ¼»¯£¬´«ÈëÎÒÃÇĞŞÕıºóµÄ new_device
+
         super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, new_device)
         
         
                
         
 #        super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, device)
-        # Ö¸¶¨Á½¸öÈÎÎñµÄÀà±ğÊı£¨°üº¬±³¾°£©
-        self.num_classes_list = [385, 184, 194, 247, 96, 269] #1 ³õÊ¼»¯Ã¿¸öÈÎÎñµÄÀà±ğÊı(º¬±³¾°)
-        self.enable_deep_supervision = False #1 ¹Ø±ÕÉî¼à¶½
+        self.num_classes_list = [385, 184, 194, 247, 96, 269]
+        self.enable_deep_supervision = False #1 ï¿½Ø±ï¿½ï¿½ï¿½à¶½
 
     @staticmethod
     def build_network_architecture(plans_manager: PlansManager,
@@ -75,16 +69,14 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
                                    num_input_channels,
                                    enable_deep_supervision: bool = True) -> nn.Module:
         
-        enable_deep_supervision = False #1 ¹Ø±ÕÉî¼à¶½
-        
-        # ¶¨ÒåÈÎÎñÀà±ğÁĞ±í
+        enable_deep_supervision = False #1 ï¿½Ø±ï¿½ï¿½ï¿½à¶½
+
         num_classes_list = [385, 184, 194, 247, 96, 269]
 
         if len(configuration_manager.patch_size) == 2:
             model = get_umamba_bot_2d_from_plans(plans_manager, dataset_json, configuration_manager,
                                                  num_input_channels, deep_supervision=enable_deep_supervision)
         elif len(configuration_manager.patch_size) == 3:
-            # µ÷ÓÃĞŞ¸ÄºóµÄ UMambaBot£¬´«Èë num_classes_list
             model = get_umamba_bot_3d_from_plans(plans_manager, dataset_json, configuration_manager,
                                                  num_input_channels, deep_supervision=enable_deep_supervision,
                                                  num_classes_list=num_classes_list)
@@ -97,7 +89,6 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
 
     def _build_loss(self):
         task_losses = []
-        # Ñ­»·´´½¨ 6 ¸öÈÎÎñµÄ Loss
         for _ in range(6):
             loss = DC_and_CE_loss({'batch_dice': self.configuration_manager.batch_dice,
                                    'smooth': 1e-5, 'do_bg': False, 'ddp': self.is_ddp}, {}, 
@@ -112,7 +103,7 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
                 loss = DeepSupervisionWrapper(loss, weights)
             task_losses.append(loss)
 
-#yuan        return MultiTask_DC_and_CE_loss(nn.ModuleList(task_losses), task_weights=[1.0]*6)
+#       return MultiTask_DC_and_CE_loss(nn.ModuleList(task_losses), task_weights=[1.0]*6)
         return MultiTask_DC_and_CE_loss(nn.ModuleList(task_losses), task_weights=[5.0, 1.0, 1.0, 1.0, 1.0, 1.0])#1
 
     def train_step(self, batch: dict) -> dict:
@@ -127,9 +118,7 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
         self.optimizer.zero_grad(set_to_none=True)
         
         with autocast(enabled=True):
-            # Ä£ĞÍÏÖÔÚ·µ»ØµÄÊÇÁĞ±í [output_184, output_90]
             output = self.network(data)
-            # ¼ÆËã×éºÏ Loss
             l = self.loss(output, target)
 
         if self.grad_scaler is not None:
@@ -146,35 +135,30 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
         return {'loss': l.detach().cpu().numpy()}
 
 
-
-
     def validation_step(self, batch: dict) -> dict:
         data = batch['data'].to(self.device, non_blocking=True)
-        target = batch['target'] # ¼ÙÉèÄãµÄ target ´ËÊ±ÓĞ 6 ¸öÍ¨µÀ
+        target = batch['target']
         if isinstance(target, list):
             target = [i.to(self.device, non_blocking=True) for i in target]
         else:
             target = target.to(self.device, non_blocking=True)
 
         with autocast(enabled=True):
-            output = self.network(data) # ·µ»Ø 6 ¸öÈÎÎñµÄÊä³öÁĞ±í
+            output = self.network(data)
             l = self.loss(output, target)
 
         all_tp, all_fp, all_fn = [], [], []
         axes = [0] + list(range(2, output[0][0].ndim if self.enable_deep_supervision else output[0].ndim))
 
         for i in range(6):
-            # ÌáÈ¡µÚ i ¸öÈÎÎñµÄÔ¤²âºÍ±êÇ©
             out_i = output[i][0] if self.enable_deep_supervision else output[i]
             tgt_i = target[0][:, i:i+1] if self.enable_deep_supervision else target[:, i:i+1]
 
-            # ¼ÆËãÖ¸±ê
             seg_i = out_i.argmax(1)[:, None]
             onehot_i = torch.zeros(out_i.shape, device=out_i.device, dtype=torch.float32)
             onehot_i.scatter_(1, seg_i, 1)
             tp, fp, fn, _ = get_tp_fp_fn_tn(onehot_i, tgt_i, axes=axes)
             
-            # ÅÅ³ı±³¾°(µÚ0Àà)£¬ÊÕ¼¯ËùÓĞÇ°¾°Àà
             all_tp.append(tp[1:])
             all_fp.append(fp[1:])
             all_fn.append(fn[1:])
