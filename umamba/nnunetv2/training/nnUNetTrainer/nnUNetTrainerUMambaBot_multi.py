@@ -5,7 +5,6 @@ from torch import nn
 from torch.cuda.amp import autocast
 from typing import Union, Tuple, List
 
-# ���� nnU-Net ԭʼ���
 from nnunetv2.training.nnUNetTrainer.nnUNetTrainer import nnUNetTrainer
 from nnunetv2.utilities.plans_handling.plans_handler import ConfigurationManager, PlansManager
 from nnunetv2.utilities.helpers import dummy_context
@@ -13,7 +12,6 @@ from nnunetv2.training.loss.compound_losses import DC_and_CE_loss
 from nnunetv2.training.loss.deep_supervision import DeepSupervisionWrapper
 from nnunetv2.training.loss.dice import MemoryEfficientSoftDiceLoss, get_tp_fp_fn_tn
 
-# �������޸ĺ��ģ�ͻ�ȡ����
 from nnunetv2.nets.UMambaBot_3d import get_umamba_bot_3d_from_plans
 from nnunetv2.nets.UMambaBot_2d import get_umamba_bot_2d_from_plans
 
@@ -60,7 +58,7 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
         
 #        super().__init__(plans, configuration, fold, dataset_json, unpack_dataset, device)
         self.num_classes_list = [385, 184, 194, 247, 96, 269]
-        self.enable_deep_supervision = False #1 �ر���ල
+        self.enable_deep_supervision = False
 
     @staticmethod
     def build_network_architecture(plans_manager: PlansManager,
@@ -69,7 +67,7 @@ class nnUNetTrainerUMambaBot(nnUNetTrainer):
                                    num_input_channels,
                                    enable_deep_supervision: bool = True) -> nn.Module:
         
-        enable_deep_supervision = False #1 �ر���ල
+        enable_deep_supervision = False
 
         num_classes_list = [385, 184, 194, 247, 96, 269]
 
